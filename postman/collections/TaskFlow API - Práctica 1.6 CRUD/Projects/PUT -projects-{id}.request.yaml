@@ -1,0 +1,14 @@
+$kind: http-request
+name: PUT /projects/{id}
+url: "{{base_url}}/projects/1"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "TaskFlow API",
+      "description": "Proyecto de Programación"
+    }
+order: 4000

@@ -1,0 +1,172 @@
+{
+  "info": {
+    "name": "TaskFlow API - Práctica 1.6 CRUD",
+    "description": "Colección con las 15 peticiones del CRUD de tasks, projects y categories.\nVariable base_url = http://127.0.0.1:8000",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000" }
+  ],
+  "item": [
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "GET /tasks (filtros y paginación)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/tasks?project_id=1&completed=false&skip=0&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["tasks"],
+              "query": [
+                { "key": "project_id", "value": "1", "description": "Solo las tareas de este proyecto" },
+                { "key": "completed", "value": "false", "description": "true = completadas, false = pendientes" },
+                { "key": "skip", "value": "0", "description": "Cuántas tareas se salta" },
+                { "key": "limit", "value": "10", "description": "Cuántas tareas devuelve como máximo" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /tasks/{id}",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/tasks/1", "host": ["{{base_url}}"], "path": ["tasks", "1"] }
+          }
+        },
+        {
+          "name": "POST /tasks",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Hacer el CRUD\",\n  \"description\": \"Práctica 1.6\",\n  \"project_id\": 1,\n  \"category_id\": 1\n}"
+            },
+            "url": { "raw": "{{base_url}}/tasks", "host": ["{{base_url}}"], "path": ["tasks"] }
+          }
+        },
+        {
+          "name": "PUT /tasks/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Hacer el CRUD\",\n  \"description\": \"Práctica 1.6 terminada\",\n  \"project_id\": 1,\n  \"category_id\": 1,\n  \"completed\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/tasks/1", "host": ["{{base_url}}"], "path": ["tasks", "1"] }
+          }
+        },
+        {
+          "name": "DELETE /tasks/{id}",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/tasks/1", "host": ["{{base_url}}"], "path": ["tasks", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "item": [
+        {
+          "name": "GET /projects",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/projects", "host": ["{{base_url}}"], "path": ["projects"] }
+          }
+        },
+        {
+          "name": "GET /projects/{id} (con sus tareas)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/projects/1", "host": ["{{base_url}}"], "path": ["projects", "1"] }
+          }
+        },
+        {
+          "name": "POST /projects",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"TaskFlow\",\n  \"description\": \"Proyecto de clase\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/projects", "host": ["{{base_url}}"], "path": ["projects"] }
+          }
+        },
+        {
+          "name": "PUT /projects/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"TaskFlow API\",\n  \"description\": \"Proyecto de Programación\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/projects/1", "host": ["{{base_url}}"], "path": ["projects", "1"] }
+          }
+        },
+        {
+          "name": "DELETE /projects/{id}",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/projects/1", "host": ["{{base_url}}"], "path": ["projects", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "GET /categories",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/categories", "host": ["{{base_url}}"], "path": ["categories"] }
+          }
+        },
+        {
+          "name": "GET /categories/{id} (con sus tareas)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/categories/1", "host": ["{{base_url}}"], "path": ["categories", "1"] }
+          }
+        },
+        {
+          "name": "POST /categories",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Clase\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/categories", "host": ["{{base_url}}"], "path": ["categories"] }
+          }
+        },
+        {
+          "name": "PUT /categories/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Instituto\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/categories/1", "host": ["{{base_url}}"], "path": ["categories", "1"] }
+          }
+        },
+        {
+          "name": "DELETE /categories/{id}",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/categories/1", "host": ["{{base_url}}"], "path": ["categories", "1"] }
+          }
+        }
+      ]
+    }
+  ]
+}

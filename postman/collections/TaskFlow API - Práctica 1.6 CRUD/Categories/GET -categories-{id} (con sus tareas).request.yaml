@@ -1,0 +1,5 @@
+$kind: http-request
+name: GET /categories/{id} (con sus tareas)
+url: "{{base_url}}/categories/1"
+method: GET
+order: 2000

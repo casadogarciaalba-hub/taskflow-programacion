@@ -1,37 +1,70 @@
 # =====================================================================
 # Router de PROYECTOS - app/routers/projects.py
 # Práctica 1.3 -> todas las rutas de proyectos
-# Práctica 1.5 -> los endpoints reciben la sesión de BD con Depends(get_db)
+# Práctica 1.5 -> sesión de BD con Depends(get_db)
+# Práctica 1.6 -> CRUD completo contra la base de datos
 # =====================================================================
 
-# datetime: para poner la fecha y hora actual
-from datetime import datetime
-
-# APIRouter: un "mini FastAPI" para agrupar rutas
-# Depends: para inyectar dependencias (la sesión de la base de datos)
-from fastapi import APIRouter, Depends
-
-# Session: tipo de la sesión de SQLAlchemy
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-# get_db: dependencia que da una sesión por petición (Práctica 1.5)
 from app.core.database import get_db
+from app import models
+from app.schemas import ProjectCreate, ProjectRead, ProjectWithTasks
 
-# Schemas de proyectos (ya estaban creados en schemas.py)
-from app.schemas import ProjectCreate, ProjectRead
-
-# Creamos el router de proyectos:
-#   prefix="/projects" -> todas las rutas de este archivo empiezan por /projects
-#   tags=["projects"]  -> en Swagger salen agrupadas en "projects"
 router = APIRouter(prefix="/projects", tags=["projects"])
 
 
-# POST /projects -> crear un proyecto (TEMPORAL, todavía no guarda en BD)
-# db: Session = Depends(get_db) -> FastAPI le pasa una sesión de BD
+# Busca un proyecto por id. Si no existe -> 404
+def buscar_proyecto(project_id: int, db: Session):
+    proyecto = db.get(models.Project, project_id)
+    if proyecto is None:
+        raise HTTPException(status_code=404, detail=f"El proyecto {project_id} no existe")
+    return proyecto
+
+
+# GET /projects -> lista de proyectos
+@router.get("", response_model=list[ProjectRead])
+def listar_proyectos(db: Session = Depends(get_db)):
+    return db.query(models.Project).all()
+
+
+# GET /projects/{id} -> detalle del proyecto CON sus tareas
+# (las tareas salen gracias a la relación "tasks" del modelo)
+@router.get("/{project_id}", response_model=ProjectWithTasks)
+def obtener_proyecto(project_id: int, db: Session = Depends(get_db)):
+    return buscar_proyecto(project_id, db)
+
+
+# POST /projects -> crear un proyecto
 @router.post("", response_model=ProjectRead, status_code=201)
 def crear_proyecto(project: ProjectCreate, db: Session = Depends(get_db)):
-    return ProjectRead(
-        id=1,                          # id inventado (todavía sin BD)
-        created_at=datetime.now(),     # fecha y hora actual
-        **project.model_dump(),        # copiamos los datos que envía el cliente
-    )
+    proyecto = models.Project(**project.model_dump())
+    db.add(proyecto)
+    db.commit()
+    db.refresh(proyecto)
+    return proyecto
+
+
+# PUT /projects/{id} -> editar un proyecto
+@router.put("/{project_id}", response_model=ProjectRead)
+def editar_proyecto(project_id: int, project: ProjectCreate, db: Session = Depends(get_db)):
+    proyecto = buscar_proyecto(project_id, db)
+    for campo, valor in project.model_dump().items():
+        setattr(proyecto, campo, valor)
+    db.commit()
+    db.refresh(proyecto)
+    return proyecto
+
+
+# DELETE /projects/{id} -> eliminar un proyecto
+# Decisión: BORRADO EN CASCADA. Una tarea no puede existir sin proyecto
+# (project_id es obligatorio), así que al borrar el proyecto se borran
+# también sus tareas. Lo hace el cascade="all, delete-orphan" de models.py
+@router.delete("/{project_id}")
+def eliminar_proyecto(project_id: int, db: Session = Depends(get_db)):
+    proyecto = buscar_proyecto(project_id, db)
+    num_tareas = len(proyecto.tasks)
+    db.delete(proyecto)
+    db.commit()
+    return {"message": f"Proyecto {project_id} eliminado junto con sus {num_tareas} tareas"}

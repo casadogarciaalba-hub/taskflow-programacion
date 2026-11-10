@@ -1,0 +1,13 @@
+$kind: http-request
+name: POST /categories
+url: "{{base_url}}/categories"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Clase"
+    }
+order: 3000

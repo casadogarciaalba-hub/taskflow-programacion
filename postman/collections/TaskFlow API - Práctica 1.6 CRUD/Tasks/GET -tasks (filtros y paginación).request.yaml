@@ -1,0 +1,18 @@
+$kind: http-request
+name: GET /tasks (filtros y paginación)
+url: "{{base_url}}/tasks?project_id=1&completed=false&skip=0&limit=10"
+method: GET
+queryParams:
+  - key: project_id
+    value: "1"
+    description: Solo las tareas de este proyecto
+  - key: completed
+    value: "false"
+    description: true = completadas, false = pendientes
+  - key: skip
+    value: "0"
+    description: Cuántas tareas se salta
+  - key: limit
+    value: "10"
+    description: Cuántas tareas devuelve como máximo
+order: 1000

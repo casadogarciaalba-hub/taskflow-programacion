@@ -1,0 +1,17 @@
+$kind: http-request
+name: PUT /tasks/{id}
+url: "{{base_url}}/tasks/1"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "title": "Hacer el CRUD",
+      "description": "Práctica 1.6 terminada",
+      "project_id": 1,
+      "category_id": 1,
+      "completed": true
+    }
+order: 4000

@@ -1,0 +1,14 @@
+$kind: http-request
+name: POST /projects
+url: "{{base_url}}/projects"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "TaskFlow",
+      "description": "Proyecto de clase"
+    }
+order: 3000

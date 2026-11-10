@@ -1,0 +1,6 @@
+$kind: collection
+description: |-
+  Colección con las 15 peticiones del CRUD de tasks, projects y categories.
+  Variable base_url = http://127.0.0.1:8000
+variables:
+  base_url: http://127.0.0.1:8000

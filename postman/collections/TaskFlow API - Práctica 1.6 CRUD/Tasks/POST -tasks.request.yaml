@@ -1,0 +1,16 @@
+$kind: http-request
+name: POST /tasks
+url: "{{base_url}}/tasks"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "title": "Hacer el CRUD",
+      "description": "Práctica 1.6",
+      "project_id": 1,
+      "category_id": 1
+    }
+order: 3000

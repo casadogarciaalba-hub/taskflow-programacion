@@ -1,0 +1,13 @@
+$kind: http-request
+name: PUT /categories/{id}
+url: "{{base_url}}/categories/1"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Instituto"
+    }
+order: 4000

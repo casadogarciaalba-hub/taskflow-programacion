@@ -3,14 +3,14 @@
 #
 # Práctica 1.1 -> endpoints /health, /version y /ping
 # Práctica 1.3 -> main.py solo crea la app e incluye los routers
-# Práctica 1.4 -> middlewares y handler global de errores, separados
-#                 en app/core/middlewares.py
+# Práctica 1.4 -> middlewares y handler global de errores en app/core
 # Práctica 1.5 -> creación de las tablas en la base de datos SQLite
+# Práctica 1.6 -> router de categorías
 # =====================================================================
 
 from fastapi import FastAPI
 
-from app.routers import tasks, projects
+from app.routers import tasks, projects, categories
 
 # Función que registra CORS, X-Process-Time y el handler de errores
 from app.core.middlewares import registrar_middlewares
@@ -24,9 +24,10 @@ app = FastAPI()
 # Crea las tablas en taskflow.db si no existen (Práctica 1.5)
 Base.metadata.create_all(bind=engine)
 
-# Registramos los routers (Práctica 1.3)
+# Registramos los routers (Práctica 1.3 y 1.6)
 app.include_router(tasks.router)
 app.include_router(projects.router)
+app.include_router(categories.router)
 
 # Registramos los middlewares (Práctica 1.4)
 registrar_middlewares(app)
@@ -50,8 +51,8 @@ def ping():
     return {"message": "pong"}
 
 
-# GET /error-prueba -> SOLO para probar el handler global (Práctica 1.4).
-# Provoca un error a propósito para comprobar que el servidor no se rompe.
+# GET /error-prueba -> SOLO para probar el handler global (Práctica 1.4)
 @app.get("/error-prueba")
 def error_prueba():
     raise Exception("Error forzado para probar el handler")
+
