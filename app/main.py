@@ -6,11 +6,12 @@
 # Práctica 1.4 -> middlewares y handler global de errores en app/core
 # Práctica 1.5 -> creación de las tablas en la base de datos SQLite
 # Práctica 1.6 -> router de categorías
+# Práctica 1.7 -> router de autenticación (JWT)
 # =====================================================================
 
 from fastapi import FastAPI
 
-from app.routers import tasks, projects, categories
+from app.routers import tasks, projects, categories, auth
 
 # Función que registra CORS, X-Process-Time y el handler de errores
 from app.core.middlewares import registrar_middlewares
@@ -24,7 +25,8 @@ app = FastAPI()
 # Crea las tablas en taskflow.db si no existen (Práctica 1.5)
 Base.metadata.create_all(bind=engine)
 
-# Registramos los routers (Práctica 1.3 y 1.6)
+# Registramos los routers (Práctica 1.3, 1.6 y 1.7)
+app.include_router(auth.router)  # Práctica 1.7
 app.include_router(tasks.router)
 app.include_router(projects.router)
 app.include_router(categories.router)
@@ -55,4 +57,3 @@ def ping():
 @app.get("/error-prueba")
 def error_prueba():
     raise Exception("Error forzado para probar el handler")
-

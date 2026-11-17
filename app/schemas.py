@@ -4,6 +4,7 @@
 # Práctica 1.2 -> schemas de entrada (Create) y salida (Read)
 # Práctica 1.6 -> schemas de categorías, TaskUpdate para editar y
 #                 schemas de detalle que incluyen las tareas
+# Práctica 1.7 -> schemas de usuario y del token JWT
 # =====================================================================
 
 from typing import Optional
@@ -67,4 +68,26 @@ class CategoryRead(CategoryCreate):
 class CategoryWithTasks(CategoryRead):
     tasks: list[TaskRead] = []
 
-    
+
+# --------------------------- USUARIOS (1.7) --------------------------
+
+# Datos que envía el cliente para REGISTRARSE (POST /auth/register)
+class UserCreate(BaseModel):
+    username: str
+    email: str
+    password: str
+
+
+# Datos que DEVUELVE la API de un usuario.
+# No tiene la contraseña: el hash nunca sale de la API
+class UserRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    username: str
+    email: str
+
+
+# Respuesta del login (POST /auth/login)
+class Token(BaseModel):
+    access_token: str
+    token_type: str

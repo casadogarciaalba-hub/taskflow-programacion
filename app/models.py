@@ -2,6 +2,7 @@
 # TASKFLOW API - Modelos de la base de datos (app/models.py)
 #
 # Práctica 1.5 -> modelos Task, Project, User y Category con SQLAlchemy.
+# Práctica 1.7 -> User guarda hashed_password (nunca la contraseña en claro)
 # Cada clase es una tabla y cada atributo es una columna (ORM).
 # Todos los usuarios pueden acceder a todos los proyectos, por eso
 # Project no tiene un usuario dueño.
@@ -20,7 +21,8 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
-    password = Column(String, nullable=False)
+    # Práctica 1.7: se guarda el HASH de la contraseña, nunca la contraseña
+    hashed_password = Column(String, nullable=False)
 
     # Relación 1-N: un usuario tiene muchas tareas asignadas
     tasks = relationship("Task", back_populates="user")
@@ -69,3 +71,4 @@ class Task(Base):
     project = relationship("Project", back_populates="tasks")
     category = relationship("Category", back_populates="tasks")
     user = relationship("User", back_populates="tasks")
+    
